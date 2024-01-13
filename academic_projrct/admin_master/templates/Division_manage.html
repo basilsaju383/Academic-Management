@@ -163,7 +163,7 @@
                                 <div class="row">
                                     
                                     <div class="col-md-6">
-                                        
+                                        <input type="hidden" value="{{request.scheme}}://{{request.get_host}}/division_mng_updt/" id="divurl">
                                         <div class="form-group">
                                             
                                             <div>                                            
@@ -295,15 +295,17 @@
         var id=document.getElementById('divi_id').value;
         var diviname=document.getElementById('div_name').value;
         var divistatus=document.getElementById('div_status').value;
+        var div_url=document.getElementById('divurl').value;
         
             $.ajax({
                 type: "GET",
-                url: "/division_mng_updt/",
+                url: "/div_url/",
                 data: {'id': id,'diviname':diviname,'divistatus':divistatus},
                 dataType: "json",
                 success: function (data) {
                     alert("SUCCESS!")
-                   
+                    location reload(true)
+
                 },
                 error: function (error) {
                     console.log(error);

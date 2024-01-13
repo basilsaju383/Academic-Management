@@ -148,7 +148,7 @@ def division_mng_updt(request):
                 add.status=divistatus
                 add.save()
                 message = "Submitted successfully."
-        res={
+        respond={
             'message':message
         }
-    return JsonResponse(res)
+    return JsonResponse(respond)
