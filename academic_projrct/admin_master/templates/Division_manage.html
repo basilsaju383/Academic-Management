@@ -112,7 +112,7 @@
                                     <td><span class="label label-danger">Deactive</span></td>
                                     {% endif %}
                                     <td>
-                                        <a href="#" class="btn btn-primary btn-rounded" id="" onclick="poping({{divi.id}})">
+                                        <a href="#" class="btn btn-primary btn-rounded"  onclick="poping('{{divi.id}}')">
                                              <span class="fa fa-pencil"></span>                                   
                                         </a>
                                         <a href="#" class="btn btn-primary btn-rounded mb-control"  data-box="#mb-delete">
@@ -260,61 +260,9 @@
         
         <!-- END TEMPLATE -->
     <!-- END SCRIPTS -->   
-    <input type="hidden" id="divi_id">  
-    <input type="hidden" id="divi_">    
+    <input type="hidden" id="divi_id">    
     </body>
 </html>
-
-
-<script>
-    function poping(id) {
-       
-        
-       var idd=document.getElementById('divi_id').value; 
-            $.ajax({
-                type: "GET",
-                url: "/division_mng_edt/",
-                data: {'id': id},
-                dataType: "json",
-                success: function (data) {
-                    document.getElementById('div_name').value=data.name;
-                    document.getElementById('div_status').value=data.status;
-                    $("#modal_basic").modal('show');
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        
-      }
-
-</script>
-
-<script>
-    function updt_div() {
-        var id=document.getElementById('divi_id').value;
-        var diviname=document.getElementById('div_name').value;
-        var divistatus=document.getElementById('div_status').value;
-        var div_url=document.getElementById('divurl').value;
-        
-            $.ajax({
-                type: "GET",
-                url: "/div_url/",
-                data: {'id': id,'diviname':diviname,'divistatus':divistatus},
-                dataType: "json",
-                success: function (data) {
-                    alert("SUCCESS!")
-                    location reload(true)
-
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        
-      }
-
-</script>
 
 
 
