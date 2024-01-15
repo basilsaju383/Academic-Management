@@ -11,5 +11,5 @@ urlpatterns = [
     path('employee_category/', views.employee_category,name="employee_category"),
     path('division_mng_edt/', views.division_mng_edt,name="division_mng_edt"),
     path('division_mng_updt/', views.division_mng_updt,name="division_mng_updt"),
-    
+    path('division_mng_dlt/', views.division_mng_dlt,name="division_mng_dlt"),
 ]

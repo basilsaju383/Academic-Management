@@ -157,3 +157,11 @@ def division_mng_updt(request):
             'message':message
         }
     return JsonResponse(respond)
+
+def division_mng_dlt(request):
+    if request.GET:
+        ids=request.GET['id']
+        obj=masterdivision.objects.get(id=ids)
+        obj.delete()
+        return JsonResponse()
+    

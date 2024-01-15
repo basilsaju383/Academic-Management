@@ -1,5 +1,5 @@
 
-    function delete_row(row){
+    function delete_row(row,id,urls){
         
         var box = $("#mb-remove-row");
         box.addClass("open");
@@ -8,6 +8,20 @@
             box.removeClass("open");
             $("#"+row).hide("slow",function(){
                 $(this).remove();
+            });
+            
+            $.ajax({
+                type: "GET",
+                url: urls,
+                data: {'id': id},
+                dataType: "json",
+                success: function (data) {
+                //$("#mb-delete").modal('show');
+                
+                },
+                error: function (error) {
+                    console.log(error);
+                }
             });
         });
         
@@ -53,4 +67,20 @@
     }
     
 
-   
+    function dlt_div(id) {
+        document.getElementById('divi_id').value=id; 
+            $.ajax({
+                type: "GET",
+                url: "/division_mng_dlt/",
+                data: {'id': id},
+                dataType: "json",
+                success: function (data) {
+                $("#mb-delete").modal('show');
+                location.reload(true);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        
+      }
