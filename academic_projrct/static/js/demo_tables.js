@@ -13,8 +13,6 @@
         
     }
     function poping(id) {
-       
-        alert('fff')
         document.getElementById('divi_id').value=id; 
             $.ajax({
                 type: "GET",
@@ -40,9 +38,8 @@
         var div_url = document.getElementById('divurl').value;
     
             $.ajax({
-                
                 type: "GET",
-                url: div_url,
+                url:div_url,
                 dataType: "json",
                 data: { 'id': id, 'diviname': diviname, 'divistatus': divistatus },
                 success: function (data) {
@@ -54,8 +51,6 @@
             }
         });
     }
-
-    
     
 
    

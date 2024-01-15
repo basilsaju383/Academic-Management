@@ -145,7 +145,12 @@ def division_mng_updt(request):
             else:
                 add = masterdivision.objects.get(id=ids)
                 add.divisionname=diviname
-                add.status=divistatus
+                if divistatus.isdigit():
+                    add.status = int(divistatus)
+                else:
+   
+                    print("Invalid status:", divistatus)
+    
                 add.save()
                 message = "Submitted successfully."
         respond={
