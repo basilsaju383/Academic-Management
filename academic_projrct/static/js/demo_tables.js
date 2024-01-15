@@ -84,3 +84,21 @@
             });
         
       }
+
+      function leo(){
+        document.getElementById('toggleAll').addEventListener('change',function(){
+            var checkboxes = document.getElementsByClassName('icheck');
+            for (var i = 0; i < checkboxes.length; i++){
+                checkboxes[i].checked = this.checked;
+            }
+        });
+      }
+
+      function atleast(){
+        if ($('.icheck:checked').length > 0){
+            $('#check').submit();
+        }else{
+            alert('please select');
+            return false
+        }
+      }

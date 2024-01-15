@@ -27,3 +27,8 @@ class masterempcat(models.Model):
     empcatname=models.CharField(max_length=100)
     empcatarea=models.IntegerField(default=0)
     status=models.IntegerField(default=1)
+    
+class subject(models.Model):
+    sub_name=models.CharField(max_length=200)
+    status=models.IntegerField(default=1)
+    classes=models.ManyToManyField('masterclass')

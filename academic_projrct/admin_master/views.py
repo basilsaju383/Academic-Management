@@ -3,7 +3,7 @@ from django.http import HttpResponse,JsonResponse
 from django.template import loader
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
-from admin_master.models import masterdpt,masterdesig,masterclass,masterdivision,masterempcat,masterqualif
+from admin_master.models import masterdpt,masterdesig,masterclass,masterdivision,masterempcat,masterqualif,subject
 
 # Create your views here.
 
@@ -165,3 +165,23 @@ def division_mng_dlt(request):
         obj.delete()
         return JsonResponse()
     
+def subject_mng(request):
+    message = ""
+    subjects = subject.objects.all()
+    ams_cls = masterclass.objects.filter(status=1)
+    if request.POST:
+        subject_name=request.POST.get('sub_name')
+        class_ids=request.POST.getlist('chkitem')
+        if not subject_name:
+            message = "Name is required."
+        elif not class_ids:
+            message = "Select class!"
+        else:
+            if subject.objects.filter(sub_name=subject_name).exists():
+                message = "Subject already exists!"
+            else:
+                subjects=subject.objects.create(sub_name=subject_name)
+                subjects.classes.set(class_ids)
+                subjects.save()
+                message = "Subject added Successfully!!!"
+    return render(request, 'subject_management.html',{'mess': message, 'subjects': subjects,'ams_cls':ams_cls})
