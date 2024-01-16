@@ -13,4 +13,5 @@ urlpatterns = [
     path('division_mng_updt/', views.division_mng_updt,name="division_mng_updt"),
     path('division_mng_dlt/', views.division_mng_dlt,name="division_mng_dlt"),
     path('subject_mng/', views.subject_mng,name="subject_mng"),
+    path('subview/', views.subview,name="subview"),
 ]

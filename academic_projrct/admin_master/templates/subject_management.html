@@ -33,12 +33,12 @@
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="#">Home</a></li>                    
-                    <li class="active">Manage Class</li>
+                    <li class="active">Subject Management</li>
                 </ul>
                 <!-- END BREADCRUMB -->   
                 <!-- PAGE TITLE -->
                 <div class="page-title">                    
-                    <h2><span class="fa fa-arrow-circle-o-left"></span> Manage Class</h2>
+                    <h2><span class="fa fa-arrow-circle-o-left"></span> Subject Management</h2>
                 </div>
                 <!-- END PAGE TITLE -->                      
                 
@@ -93,7 +93,7 @@
                                         </div>
                                     </div>
                                     <div class="panel-footer">
-                                        <button type="reset" class="btn btn-default">Clear Form</button>                                    
+                                        <button type="reset" class="btn btn-default">Clear Form</button> {{mess}}                                   
                                         <button type="submit" class="btn btn-primary pull-right" onClick="return atleast();">Submit</button>
                                     </div>
                                 </div>
@@ -128,28 +128,31 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {% for i in subjects %}
-                                            <tr>
-                                                <td>{{forloop.counter}}</td>
-                                                <td>{{i.sub_name}}</td>
-                                                <td>{% if i.status == 1 %}
-                                                    <span class="badge bg-success">Active</span>
+                                            {% for i in sublist %}
+                                                <tr>
+                                                    <td>{{ forloop.counter }}</td>
+                                                    <td>{{ i.sub_name }}</td>
+                                                    {% if i.status == 1 %}
+                                                        <td>
+                                                            <span class="badge bg-success">Active</span>
+                                                        </td>
                                                     {% endif %}
-                                                  
                                                     {% if i.status == 0 %}
-                                                    <span class="badge bg-danger">Deactive</span>
-                                                    {% endif %}</td>
-                                                    <td>
-                                                        <button class="btn btn-default btn-rounded btn-sm" onClick="subject_edit({{i.id}})" ><span id="round{{i.id}}" class="fa fa-pencil"></span></button>
-                                                        {% comment %} {% if i.status == 0 %} {% endcomment %}
-                                                        <button class="btn btn-default btn-rounded btn-sm" onClick="subject_delete('rid{{i.id}}',{{i.id}})"><span class="fa fa-trash-o"></span></button>
-                                                        {% comment %} {% endif %} {% endcomment %}
-                                                        <button class="btn btn-default btn-rounded btn-sm" onClick="subject_view({{i.id}})" ><span id="round{{i.id}}" class="fa fa-eye"></span></button>
+                                                        <td>
+                                                            <span class="badge bg-danger">Deactive</span>
+                                                        </td>
+                                                    {% endif %}
+                                                        <td>
+                                                            <button class="btn btn-default btn-rounded btn-sm" onClick="subject_edit({{i.id}})" ><span id="round{{i.id}}" class="fa fa-pencil"></span></button>
+                                                            {% comment %} {% if i.status == 0 %} {% endcomment %}
+                                                            <button class="btn btn-default btn-rounded btn-sm" onClick="subject_delete('rid{{i.id}}',{{i.id}})"><span class="fa fa-trash-o"></span></button>
+                                                            {% comment %} {% endif %} {% endcomment %}
+                                                            <button class="btn btn-default btn-rounded btn-sm" onClick="sub_view({{i.id}})" ><span id="round{{i.id}}" class="fa fa-eye"></span></button>
 
-                                                    </td>
-                                                
-                                            </tr>
-                                            {% endfor %}
+                                                        </td>
+                                                    
+                                                </tr>
+                                        {% endfor %}
                                             
                                         </tbody>
                                     </table>
@@ -159,7 +162,7 @@
                     </div>
                     </div>
                 </div>
-                <div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+                <div class="modal" id="#" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -195,10 +198,10 @@
                             <div class="panel-body"> 
                                 <div class="row">
                                     <div class="form-group">
-                                        {% for i in list %}
+                                        {% for i in sub %}
                                             {% if i.status == 1 %}
                                         <div class="col-xs-12">                                                                                                                                        
-                                            <label class="check"><input type="checkbox" value="{{i.id}}"  name="chkitem" class="icheck" /> {{i.name}}</label>    
+                                            <label class="check"><input type="checkbox" value="{{i.id}}"  name="chkitem" class="icheck" /> {{i.sub_name}}</label>    
                                         </div>
                                         {% endif %}
                                        {% endfor %} 
@@ -219,16 +222,16 @@
                     <div class="modal-dialog">
                         <div class="modal-content">                    
                             <div class="modal-body">
-                                <h3>Subject{{i.name}}</h3>
+                                <h3>Subject{{i.sub_name}}</h3>
                                 <p>Status {{i.status}}</p>
                             </div>
                             <div class="panel-body"> 
                                 <div class="row">
                                     <div class="form-group">
-                                        {% for i in list %}
+                                        {% for i in sub %}
                                             {% if i.status == 1 %}
                                         <div class="col-xs-12">                                                                                                                                        
-                                            <label class="check"><input type="checkbox" value="{{i.id}}"  name="chkitem" class="icheck" /> {{i.name}}</label>    
+                                            <label class="check"><input type="checkbox" value="{{i.id}}"  name="chkitem" class="icheck" /> {{i.sub_name}}</label>    
                                         </div>
                                         {% endif %}
                                        {% endfor %} 
@@ -259,8 +262,36 @@
                     </div>
                 </div>
 <!-- END MESSAGE BOX-->
+<div class="modal" id="modal_basic" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="defModalHead">Subject Details </h4>
+            </div>
+            <div class="modal-body">
+            <div class="row">
+                <div class="col-xs-3">
+                    <label><strong>Subject: </strong></label>
+                </div>
+                <div class="col-xs-9">
+                    <span id="viewsubject"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <h6><span><u>Classes</u></span></h6>
+                    <ul id="lists">
+                        <li><span id="Classes">maths</li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
         
-
+<input type="hidden" id="view">
 
         <!-- START PRELOADS -->
         {% include 'script.html' %}

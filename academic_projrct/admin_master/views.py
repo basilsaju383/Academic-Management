@@ -167,7 +167,7 @@ def division_mng_dlt(request):
     
 def subject_mng(request):
     message = ""
-    subjects = subject.objects.all()
+    subj = subject.objects.all()
     ams_cls = masterclass.objects.filter(status=1)
     if request.POST:
         subject_name=request.POST.get('sub_name')
@@ -184,4 +184,15 @@ def subject_mng(request):
                 subjects.classes.set(class_ids)
                 subjects.save()
                 message = "Subject added Successfully!!!"
-    return render(request, 'subject_management.html',{'mess': message, 'subjects': subjects,'ams_cls':ams_cls})
+    return render(request, 'subject_management.html',{'mess': message, 'sublist': subj,'ams_cls':ams_cls})
+
+
+def subview(request):
+    ids=request.GET['id']
+    obj=subject.objects.get(id=ids)
+    clsss=list(obj.classes.values('id','classname'))
+    
+    respond={
+        'id':obj.id,'subname':obj.sub_name,'classes':clsss
+    }
+    return JsonResponse(respond)

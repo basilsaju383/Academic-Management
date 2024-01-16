@@ -102,3 +102,35 @@
             return false
         }
       }
+
+      function sub_view(id) {
+        document.getElementById('view').value = id;
+        $.ajax({
+            type: "GET",
+            url: "/subview/",
+            data: { 'id': id },
+            dataType: "json",
+            success: function (data) {
+                document.getElementById('viewsubject').innerHTML = data.subname;
+                var container = document.getElementById('lists');
+                container.innerHTML = '';
+                
+                // Improved createbox function
+                function createbox(id, classname) {
+                    var li = document.createElement('li');
+                    var span = document.createElement('span');
+                    span.id = 'classes';
+                    span.innerText = classname;
+                    li.appendChild(span);
+                    return li;
+                }
+                data.classes.forEach(function (item) {
+                    container.appendChild(createbox(item.id, item.classname));
+                });
+                $("#modal_basic").modal('show');
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
