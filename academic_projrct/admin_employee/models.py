@@ -33,8 +33,6 @@ class EmployeeRegistration(models.Model):
         (2,'Female'),
         (3, 'Non-binary'),
         (4, 'Other'),
-       
-
     ]
     gender=models.IntegerField(choices=EMP_GENDER)
     dob = models.DateField()
