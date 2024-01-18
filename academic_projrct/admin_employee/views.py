@@ -81,3 +81,6 @@ def empl_mng(request):
 
     data = {'qlist': qual, 'deslist': des, 'deplist': dep, 'catlist': empcat, 'clslist': cls, 'divlist': div, 'msg': msg}
     return render(request, 'emp_mng.html', data)
+
+def empl_sub_list(request):
+    return render(request, 'emp_mng.html')
