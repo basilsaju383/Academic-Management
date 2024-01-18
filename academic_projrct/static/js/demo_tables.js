@@ -134,3 +134,49 @@
             }
         });
     }
+
+    
+    function showTable(area_id) {
+        // Get the selected value from the dropdown
+        var selectedOption = document.getElementById("mySelect").value;
+
+        // Get the table element
+        var table = document.getElementById("myTable");
+
+        // Check the selected option and show/hide the table accordingly
+        if (selectedOption == 1) {
+            table.style.display = "table"; // Show the table
+        } else {
+            table.style.display = "none"; // Hide the table
+        }
+    }
+
+
+    function sub_lists() {
+       
+        var subjectDropdown = document.getElementById("subjectDropdown");
+        var classId = document.getElementById("idd").value;
+        console.log(classId);
+        
+        subjectDropdown.innerHTML = '';
+
+        // Fetch subjects based on the selected class using AJAX
+        $.ajax({
+            url: "/sub_listss/",
+            type: 'GET',
+            data: { "classId": classId },
+            dataType: 'json',
+            success: function (data) {
+                data.subjects.forEach(function (item) {
+                    var option = document.createElement("option");
+                    option.value = item.id;
+                    option.text = item.sub_name;
+                    subjectDropdown.add(option);
+                });
+            },
+            error: function (error) {
+                console.log('Error fetching subjects:', error);
+            }
+        });
+    }
+    

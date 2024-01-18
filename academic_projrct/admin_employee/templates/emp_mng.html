@@ -186,10 +186,14 @@
 
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Class</label>
-                                    <div class="col-md-10">                                                                                
-                                        <select class="form-control select" name="selcls">
+                                    <div class="col-md-10"> 
+                                        <input type="hidden" id="idd">                                                                               
+                                        <select class="form-control select" name="selcls" id="sel_cls" onchange="sub_lists({{i.id}})">
                                             <option value="0">--Select Class--</option>
-                                            <option value="1">3</option>
+                                        {% for i in clslist %}
+                                           
+                                            <option value="{{i.id}}">{{i.classname}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
@@ -198,16 +202,17 @@
                                     <div class="col-md-10">                                                                                
                                         <select class="form-control select" name="seldiv">
                                             <option value="0">--Select Division--</option>
-                                            <option value="1">2</option>
+                                            {% for i in divlist %}
+                                            <option value="{{i.id}}">{{i.divisionname}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Subject</label>
                                     <div class="col-md-10">                                                                                
-                                        <select class="form-control select" name="selsub">
+                                        <select class="form-control select" name="selsub" id="subjectDropdown">
                                             <option value="0">--Select Subject--</option>
-                                            <option value="1">4</option>
                                         </select>
                                     </div>
                                 </div>
@@ -285,22 +290,8 @@
 
         <!-- START PRELOADS -->
         {% include 'script.html' %} 
-        <script>
-            function showTable(area_id) {
-                // Get the selected value from the dropdown
-                var selectedOption = document.getElementById("mySelect").value;
-        
-                // Get the table element
-                var table = document.getElementById("myTable");
-        
-                // Check the selected option and show/hide the table accordingly
-                if (selectedOption == 1) {
-                    table.style.display = "table"; // Show the table
-                } else {
-                    table.style.display = "none"; // Hide the table
-                }
-            }
-        </script>       
+        <script type="text/javascript" src="{% static 'js/demo_tables.js' %}"></script>
+              
         <!-- END TEMPLATE -->
     <!-- END SCRIPTS -->                   
     </body>

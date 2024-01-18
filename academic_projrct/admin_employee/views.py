@@ -83,4 +83,15 @@ def empl_mng(request):
     return render(request, 'emp_mng.html', data)
 
 def empl_sub_list(request):
+    
     return render(request, 'emp_mng.html')
+
+
+
+def sub_listss(request):
+    class_id = request.GET['classId']
+    academic_class = get_object_or_404(masterclass, id=class_id, status=1)
+    subjects = list(subject.objects.filter(classes=academic_class, status=1).values('id', 'sub_name'))
+    print(subjects)
+    response_data={"subjects":subjects}
+    return JsonResponse(response_data)
