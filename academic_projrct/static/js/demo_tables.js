@@ -1,6 +1,5 @@
 
     function delete_row(row,id,urls){
-        
         var box = $("#mb-remove-row");
         box.addClass("open");
         

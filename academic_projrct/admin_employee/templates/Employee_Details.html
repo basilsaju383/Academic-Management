@@ -64,31 +64,42 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Name</th>
-                                    <th></th>
+                                    <th>Address</th>
+                                    <th>Photo</th>
+                                    <th>QR Code</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 
                                 </tr>
                             </thead>
                             <tbody>
-                                {% for divi in divisions %}
-                                <tr id="row{{divi.id}}">
+                                {% for i in employee_data %}
+                                <tr id="row{{i.id}}">
                                     <td>{{ forloop.counter }}</td>
-                                    <td>{{ divi.divisionname }}</td>
-                                    
-                                    {% if divi.status == 1 %}
+                                    <td>{{ i.empname }}</td>
+                                    <td>{{ i.address }}</td>
+                                    <td><img src="{{i.photo.url}}" width="100px" align="left"></td>
+                                    {% if i.barcode != '' %}
+                                    <td><img src="{{i.barcode.url}}" style="width: 100px; height: 100px;" align="left"></td>
+                                    {% endif %}
+                                    {% if i.barcode == '' %}
+                                    <td>No QR Code</td>
+                                    {% endif %}
+                                    {% if i.status == 1 %}
                                     <td><span class="label label-warning">Active</span></td>
                                     {% endif %}
-                                    {% if divi.status == 0 %}
+                                    {% if i.status == 0 %}
                                     <td><span class="label label-danger">Deactive</span></td>
                                     {% endif %}
                                     <td>
-                                        <a href="#" class="btn btn-primary btn-rounded"  onclick="poping('{{divi.id}}')">
+                                        <a href="{% url 'fetch_employee' item_id=i.id %}" class="btn btn-primary btn-rounded">
                                              <span class="fa fa-pencil"></span>                                   
                                         </a>
-                                        <a href="#" class="btn btn-primary btn-rounded mb-control" onclick="delete_row('row{{divi.id}}',{{divi.id}},'/division_mng_dlt/');">
+                                        {% if i.status == 0 %}
+                                        <a href="#" class="btn btn-primary btn-rounded mb-control" onclick="delete_row('row{{i.id}}',{{i.id}},'/delete_empl/');">
                                             <span class="fa fa-trash-o"></span>                                   
                                        </a>
+                                       {% endif %}
                                     </td>
                                 </tr>
                                 {% endfor %}

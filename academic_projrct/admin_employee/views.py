@@ -1,10 +1,12 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from admin_master.models import *
 from django.http import JsonResponse
 from admin_employee.models import *
 from io import BytesIO
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
+import qrcode
+import json
 
 
 
@@ -29,6 +31,36 @@ def empl_mng(request):
         empsalary = request.POST['select_sal'].strip()
         emp_jdate = request.POST['select_jdate'].strip()
         emp_photo = request.FILES['select_photo']
+        
+        deptname=masterdpt.objects.get(id=empdep_id)
+        qr_data = f"Name: {emp_name} \nDOB: {empdob}\nDepartment: {deptname.dptname}\nJoin Date: {emp_jdate}"
+
+        # Generate QR code image
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+        img = qr.make_image(fill_color="black", back_color="white")
+
+        # Save the QR code image to a BytesIO object
+        qr_image_io = BytesIO()
+        img.save(qr_image_io, format='PNG')
+        qr_image_io.seek(0)
+
+        # Create an InMemoryUploadedFile from BytesIO
+        qr_image = InMemoryUploadedFile(
+            file=qr_image_io,
+            field_name=None,
+            name=f'qr_code_{emp_name}.png',
+            content_type='image/png',
+            size=qr_image_io.tell(),
+            charset=None,
+        )
+        
 
         # Create Employee instance and save to the database
         employee_instance, created = EmployeeRegistration.objects.get_or_create(empcatid=empcat_instance,
@@ -43,7 +75,8 @@ def empl_mng(request):
             qualid=empqual_instance,
             salary=empsalary,
             jdate=emp_jdate,
-            photo=emp_photo)
+            photo=emp_photo,
+            barcode=qr_image)
         
         # insert employee dept table
         deptobj=Department_employee(deptid=empdep_instance,empid=employee_instance,fromdate=emp_jdate)
@@ -95,3 +128,46 @@ def sub_listss(request):
     print(subjects)
     response_data={"subjects":subjects}
     return JsonResponse(response_data)
+
+
+def get_employee_details(request):
+    employee_data=EmployeeRegistration.objects.all()
+    return render(request,'Employee_Details.html',{'employee_data':employee_data})
+
+
+def fetch_employee(request, item_id):
+    employee_data = EmployeeRegistration.objects.get(id=item_id)
+    if request.POST:
+        edited_name = request.POST['edit_name']
+        edited_gender = request.POST['edit_gen']
+        edited_dob = request.POST['edit_dob']
+        edited_mob = request.POST['edit_numb']
+        edited_status = request.POST['edit_status']
+        edited_email = request.POST['edit_email']
+        edited_ads = request.POST['edit_addrss']
+        edited_jdate = request.POST['edit_jdate']
+        edited_photo = request.FILES['edit_photo']
+        obj = EmployeeRegistration.objects.get(id=item_id)
+        obj.empname = edited_name
+        obj.gender = edited_gender
+        obj.email = edited_email
+        obj.mob = edited_mob
+        obj.address = edited_ads
+        obj.status = edited_status
+        obj.dob = edited_dob
+        obj.jdate = edited_jdate
+        obj.photo = edited_photo
+        obj.save()
+        return redirect('get_employee_details')
+        
+    return render(request, 'Employee_edit.html', {'data': employee_data})
+
+
+def delete_empl(request):
+    if request.GET:
+        ids=request.GET['id']
+        obj=EmployeeRegistration.objects.get(id=ids)
+        obj.delete()
+        return JsonResponse()
+    
+
