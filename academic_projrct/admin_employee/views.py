@@ -120,24 +120,36 @@ def empl_sub_list(request):
     return render(request, 'emp_mng.html')
 
 
-
 def sub_listss(request):
-    class_id = request.GET['classId']
+    class_id = request.GET.get('classId')
     academic_class = get_object_or_404(masterclass, id=class_id, status=1)
     subjects = list(subject.objects.filter(classes=academic_class, status=1).values('id', 'sub_name'))
-    print(subjects)
-    response_data={"subjects":subjects}
+    for subj in subjects:
+        if not subj['id']:
+            subj['id'] = 0 
+    response_data = {"subjects": subjects}
     return JsonResponse(response_data)
+
 
 
 def get_employee_details(request):
     employee_data=EmployeeRegistration.objects.all()
     return render(request,'Employee_Details.html',{'employee_data':employee_data})
 
-
 def fetch_employee(request, item_id):
     employee_data = EmployeeRegistration.objects.get(id=item_id)
-    if request.POST:
+    sub_cls_div_objects = employee_data.sub_cls_div_set.all()
+
+    class_names = []
+    division_names = []
+    subject_names = []
+
+    for sub_cls_div_obj in sub_cls_div_objects:
+        class_names.append(sub_cls_div_obj.classid.classname)
+        division_names.append(sub_cls_div_obj.divid.divisionname)
+        subject_names.append(sub_cls_div_obj.subid.sub_name)
+
+    if request.method == 'POST':
         edited_name = request.POST['edit_name']
         edited_gender = request.POST['edit_gen']
         edited_dob = request.POST['edit_dob']
@@ -159,9 +171,14 @@ def fetch_employee(request, item_id):
         obj.photo = edited_photo
         obj.save()
         return redirect('get_employee_details')
-        
-    return render(request, 'Employee_edit.html', {'data': employee_data})
-
+    context = {
+        'employee_data': employee_data,
+        'sub_cls_div_objects': sub_cls_div_objects,
+        'class_names': class_names,
+        'division_names': division_names,
+        'subject_names': subject_names,
+    }
+    return render(request, 'Employee_edit.html', context)
 
 def delete_empl(request):
     if request.GET:

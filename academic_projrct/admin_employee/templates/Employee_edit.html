@@ -20,7 +20,7 @@
         <div class="page-container">
             
             <!-- START PAGE SIDEBAR -->
-            {% include 'master_sidebar.html' %}
+            {% include 'employee_sidebar.html' %}
             <!-- END PAGE SIDEBAR -->
             
             <!-- PAGE CONTENT -->
@@ -53,19 +53,19 @@
                             <!-- START DEFAULT FORM ELEMENTS -->
                             <div class="block">
                                 <h4>Edit Employee</h4>
-                                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" action="{% url 'fetch_employee' item_id=data.id %}">
+                                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" action="{% url 'fetch_employee' item_id=employee_data.id %}">
                                     {% csrf_token %}                                    
                                     
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Name</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" placeholder="Enter Name" name="edit_name" required value="{{data.empname}}"/>
+                                            <input type="text" class="form-control" placeholder="Enter Name" name="edit_name" required value="{{employee_data.empname}}"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">DOB</label>
                                         <div class="col-md-10">
-                                            <input type="date" class="form-control" value="{{data.dob|date:'Y-m-d'}}" name="edit_dob" required/>
+                                            <input type="date" class="form-control" value="{{employee_data.dob|date:'Y-m-d'}}" name="edit_dob" required/>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -73,10 +73,10 @@
                                         <div class="col-md-10">                                                                                
                                             <select class="form-control select" name="edit_gen" required>
                                                 <option value="0">--Select Gender--</option>
-                                                {% if data.gender == 1 %}
+                                                {% if employee_data.gender == 1 %}
                                                 <option value="1" selected="selected">Male</option>
                                                 {% endif %}
-                                                {% if data.gender == 2 %}
+                                                {% if employee_data.gender == 2 %}
                                                 <option value="2" selected="selected">Female</option>
                                                 {% endif %}
                                             </select>
@@ -86,34 +86,34 @@
                                         <label class="col-md-2 control-label">status</label>
                                         <div class="col-md-10">
                                             <select class="form-control " data-style="btn-success" name="edit_status" id="editstatus" value="{{data.status}}">
-                                                <option value="1" {% if data.status == '1' %} selected {% endif %}>Active</option>
-                                                <option value="0" {% if data.status == '0' %} selected {% endif %}>Deactive</option>
+                                                <option value="1" {% if employee_data.status == '1' %} selected {% endif %}>Active</option>
+                                                <option value="0" {% if employee_data.status == '0' %} selected {% endif %}>Deactive</option>
                                             </select>
                                         </div>
                                     </div>                              
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Mobile</label>
                                         <div class="col-md-10">
-                                            <input type="number" value="{{data.mob}}" class="form-control" name="edit_numb" required>
+                                            <input type="number" value="{{employee_data.mob}}" class="form-control" name="edit_numb" required>
                                         </div>
                                     </div>                                    
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">E-mail</label>
                                         <div class="col-md-10">
-                                            <input type="email" value="{{data.email}}" class="form-control" placeholder="enter Your Mail" name="edit_email" required>
+                                            <input type="email" value="{{employee_data.email}}" class="form-control" placeholder="enter Your Mail" name="edit_email" required>
                                         </div>
                                     </div>                                                                        
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Address</label>
                                         <div class="col-md-10">
-                                            <textarea class="form-control" rows="5" name="edit_addrss" required>{{data.address}}</textarea>
+                                            <textarea class="form-control" rows="5" name="edit_addrss" required>{{employee_data.address}}</textarea>
                                         </div>
                                     </div>
                                     
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Join Date</label>
                                         <div class="col-md-10">
-                                            <input type="date" class="form-control" value="{{data.jdate|date:'Y-m-d'}}" name="edit_jdate" required/>
+                                            <input type="date" class="form-control" value="{{employee_data.jdate|date:'Y-m-d'}}" name="edit_jdate" required/>
                                         </div>
                                     </div> 
                                     <div class="form-group">
@@ -121,7 +121,7 @@
                                         <div class="col-md-10">
                                             <input type="file" name="edit_photo" required/>
                                             {% if data.photo %}
-                                             <img src="{{data.photo.url}}" style="width: 100px; height: 100px;" align="left">
+                                             <img src="{{employee_data.photo.url}}" style="width: 100px; height: 100px;" align="left">
             
                                             {% else %}
                                               <span>No Photo</span>
@@ -144,8 +144,8 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Class</label>
                                     <div class="col-md-10"> 
-                                        <input type="hidden" id="idd">                                                                               
-                                        <select class="form-control select" name="selcls" id="sel_cls" onchange="sub_lists({{i.id}})">
+                                                                                                         
+                                        <select class="form-control select" name="selcls" id="sel_cls" onchange="sub_lists(this.value)">
                                             <option value="0">--Select Class--</option>
                                         {% for i in clslist %}
                                            
@@ -157,7 +157,7 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Division</label>
                                     <div class="col-md-10">                                                                                
-                                        <select class="form-control select" name="seldiv">
+                                        <select class="form-control select" name="seldiv" id="div_select">
                                             <option value="0">--Select Division--</option>
                                             {% for i in divlist %}
                                             <option value="{{i.id}}">{{i.divisionname}}</option>
@@ -174,7 +174,7 @@
                                     </div>
                                 </div>
                                 <div class="btn-group pull-right">
-                                        <button class="btn btn-primary" type="submit">Add</button>
+                                        <button class="btn btn-primary" type="submit" onclick="subclass_adding()">Add</button>
                                     </div>
                                <!-- START DEFAULT DATATABLE -->
                  <div class="panel panel-default">
@@ -189,19 +189,9 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tabledata">
                                 
-                                <tr>
-                                    <td>1</td>
-                                    <td>class 1</td>
-                                    <td>Division 2</td>
-                                    <td>maths</td>
-                                    <td>
-                                        <a href="#" class="btn btn-primary btn-rounded mb-control"  data-box="#mb-delete">
-                                            <span class="fa fa-trash-o"></span>                                   
-                                       </a>
-                                    </td>
-                                </tr>
+                                
                                 
                             </tbody>
                                  

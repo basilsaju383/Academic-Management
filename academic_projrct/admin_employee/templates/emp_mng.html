@@ -20,7 +20,7 @@
         <div class="page-container">
             
             <!-- START PAGE SIDEBAR -->
-            {% include 'master_sidebar.html' %}
+            {% include 'employee_sidebar.html' %}
             <!-- END PAGE SIDEBAR -->
             
             <!-- PAGE CONTENT -->
@@ -187,8 +187,8 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Class</label>
                                     <div class="col-md-10"> 
-                                        <input type="hidden" id="idd">                                                                               
-                                        <select class="form-control select" name="selcls" id="sel_cls" onchange="sub_lists({{i.id}})">
+                                                                                                         
+                                        <select class="form-control select" name="selcls" id="sel_cls" onchange="sub_lists(this.value)">
                                             <option value="0">--Select Class--</option>
                                         {% for i in clslist %}
                                            
@@ -200,7 +200,7 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Division</label>
                                     <div class="col-md-10">                                                                                
-                                        <select class="form-control select" name="seldiv">
+                                        <select class="form-control select" name="seldiv" id="div_select">
                                             <option value="0">--Select Division--</option>
                                             {% for i in divlist %}
                                             <option value="{{i.id}}">{{i.divisionname}}</option>
@@ -217,7 +217,7 @@
                                     </div>
                                 </div>
                                 <div class="btn-group pull-right">
-                                        <button class="btn btn-primary" type="submit">Add</button>
+                                        <button class="btn btn-primary" type="submit" onclick="subclass_adding()">Add</button>
                                     </div>
                                <!-- START DEFAULT DATATABLE -->
                  <div class="panel panel-default">
@@ -232,19 +232,9 @@
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="tabledata">
                                 
-                                <tr>
-                                    <td>1</td>
-                                    <td>class 1</td>
-                                    <td>Division 2</td>
-                                    <td>maths</td>
-                                    <td>
-                                        <a href="#" class="btn btn-primary btn-rounded mb-control"  data-box="#mb-delete">
-                                            <span class="fa fa-trash-o"></span>                                   
-                                       </a>
-                                    </td>
-                                </tr>
+                                
                                 
                             </tbody>
                                  

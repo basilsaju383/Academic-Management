@@ -151,31 +151,105 @@
     }
 
 
-    function sub_lists() {
-       
+    function sub_lists(id) {
         var subjectDropdown = document.getElementById("subjectDropdown");
-        var classId = document.getElementById("idd").value;
-        console.log(classId);
-        
-        subjectDropdown.innerHTML = '';
-
-        // Fetch subjects based on the selected class using AJAX
+        document.getElementById("subjectDropdown").innerHTML="";
         $.ajax({
             url: "/sub_listss/",
             type: 'GET',
-            data: { "classId": classId },
+            data: { "classId": id },
             dataType: 'json',
             success: function (data) {
-                data.subjects.forEach(function (item) {
-                    var option = document.createElement("option");
-                    option.value = item.id;
-                    option.text = item.sub_name;
-                    subjectDropdown.add(option);
-                });
+                // Clear existing options
+                subjectDropdown.innerHTML = "";
+        
+                // Check if data.subjects is defined and not empty
+                if (data.subjects && data.subjects.length > 0) {
+                    // Create default option
+                    var defaultOption = document.createElement("option");
+                    defaultOption.value = 0;
+                    defaultOption.text = "--select subject--";
+                    subjectDropdown.add(defaultOption);
+        
+                    // Add options based on data.subjects
+                    data.subjects.forEach(function (item) {
+                        var option = document.createElement("option");
+                        option.value = item.id || '';  
+                        option.text = item.sub_name;
+                        subjectDropdown.add(option);
+                    });
+                } else {
+                    // If no subjects, display a message or handle it as needed
+                    console.log('No subjects available');
+                }
             },
+            
             error: function (error) {
                 console.log('Error fetching subjects:', error);
             }
         });
     }
     
+
+    function subclass_adding() {
+    var select_class = $('#sel_cls option:selected').text();
+    var select_division = $('#div_select option:selected').text();
+    var select_subject = $('#subjectDropdown option:selected').text();
+    var selected_classid = $('#sel_cls').val();
+    var selected_divid = $('#div_select').val();
+    var selected_subid = $('#subjectDropdown').val();
+
+    if ($('#sel_cls')[0].selectedIndex === 0 || $('#div_select')[0].selectedIndex === 0 || $('#subjectDropdown')[0].selectedIndex === 0) 
+    {
+        alert('Please select a class , Division and Subject.');
+        return;
+    }
+
+    
+
+    // Check if the combination already in the table
+    var combinationExists = false;
+
+    $('#tabledata tr').each(function () {
+        var existingClass = $(this).find('td:eq(1)').text().trim();
+        var existingDivision = $(this).find('td:eq(2)').text().trim();
+        var existingSubject = $(this).find('td:eq(3)').text().trim();
+
+        if (
+            existingClass === select_class &&
+            existingDivision === select_division &&
+            existingSubject === select_subject
+        ) {
+            combinationExists = true;
+            return false; // Break out of the loop if a matching row is found
+        }
+    });
+
+    // If the row does not exist, append a new one
+    if (combinationExists) {
+        alert('Combination already exists.');
+    } else {
+        var serial=0;
+
+        serial++;
+        var newRow =
+            '<tr>' +
+            '<td>' + serial + '</td>' +
+            '<td>' + select_class + '<input type="hidden" value="'+selected_classid+'" name="selcls"></td>' +
+            '<td>' + select_division + '<input type="hidden" value="'+selected_divid+'" name="seldiv"></td>' +
+            '<td>' + select_subject + '<input type="hidden" value="'+selected_subid+'" name="selsub"></td>' +
+            '<td><button class="deleteRow btn-danger">Remove</button></td>' +
+            '</tr>';
+
+        $('#tabledata').append(newRow);
+        document.getElementById('sel_cls').value='';
+        document.getElementById('div_select').value='';
+        document.getElementById('subjectDropdown').innerHTML='<option value="">Select Subject</option>';
+    }
+
+    // delete row functionality
+    $('#tabledata').on('click', '.deleteRow', function () {
+        // serial--; // Decrement serial when deleting a row
+        $(this).closest('tr').remove();
+    });
+}
