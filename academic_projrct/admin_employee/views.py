@@ -7,6 +7,7 @@ from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import qrcode
 import json
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -91,12 +92,15 @@ def empl_mng(request):
         salaryobj.save()
 
         # insert employee scd table
-        classlist=request.POST.getlist("selcls")
-        divlist=request.POST.getlist("seldiv")
-        sublist=request.POST.getlist("selsub")
-        if classlist:
-            for class_id,div_id,sub_id in zip(classlist,divlist,sublist):
-                scdobj=sub_cls_div(empid=employee_instance,classid=get_object_or_404(masterclass, id=class_id),divid=get_object_or_404(masterdivision,id=div_id),subid=get_object_or_404(subject,id=sub_id))
+        classlist = request.POST.getlist("selcls")
+        divlist = request.POST.getlist("seldiv")
+        sublist = request.POST.getlist("selsub")
+        
+        for class_id, div_id, sub_id in zip(classlist, divlist, sublist):
+            if class_id and div_id and sub_id:
+                scdobj = sub_cls_div(empid=employee_instance, classid=get_object_or_404(masterclass, id=class_id),
+                                 divid=get_object_or_404(masterdivision, id=div_id),
+                                 subid=get_object_or_404(subject, id=sub_id))
                 scdobj.save()
         
 
@@ -112,7 +116,13 @@ def empl_mng(request):
     div = masterdivision.objects.filter(status=1).order_by("divisionname")
 
 
-    data = {'qlist': qual, 'deslist': des, 'deplist': dep, 'catlist': empcat, 'clslist': cls, 'divlist': div, 'msg': msg}
+    data = {'qlist': qual,
+            'deslist': des,
+            'deplist': dep,
+            'catlist': empcat,
+            'clslist': cls,
+            'divlist': div,
+            'msg': msg}
     return render(request, 'emp_mng.html', data)
 
 def empl_sub_list(request):
@@ -136,49 +146,49 @@ def get_employee_details(request):
     employee_data=EmployeeRegistration.objects.all()
     return render(request,'Employee_Details.html',{'employee_data':employee_data})
 
-def fetch_employee(request, item_id):
-    employee_data = EmployeeRegistration.objects.get(id=item_id)
-    sub_cls_div_objects = employee_data.sub_cls_div_set.all()
-
-    class_names = []
-    division_names = []
-    subject_names = []
-
-    for sub_cls_div_obj in sub_cls_div_objects:
-        class_names.append(sub_cls_div_obj.classid.classname)
-        division_names.append(sub_cls_div_obj.divid.divisionname)
-        subject_names.append(sub_cls_div_obj.subid.sub_name)
-
-    if request.method == 'POST':
-        edited_name = request.POST['edit_name']
-        edited_gender = request.POST['edit_gen']
-        edited_dob = request.POST['edit_dob']
-        edited_mob = request.POST['edit_numb']
-        edited_status = request.POST['edit_status']
-        edited_email = request.POST['edit_email']
-        edited_ads = request.POST['edit_addrss']
-        edited_jdate = request.POST['edit_jdate']
-        edited_photo = request.FILES['edit_photo']
-        obj = EmployeeRegistration.objects.get(id=item_id)
-        obj.empname = edited_name
-        obj.gender = edited_gender
-        obj.email = edited_email
-        obj.mob = edited_mob
-        obj.address = edited_ads
-        obj.status = edited_status
-        obj.dob = edited_dob
-        obj.jdate = edited_jdate
-        obj.photo = edited_photo
+@csrf_exempt
+def fetch_employee(request,item_id):
+    if request.POST:
+        var_name=request.POST['edit_name']
+        var_dob=request.POST['edit_dob']
+        var_gender=request.POST['edit_gen']
+        var_mobile=request.POST['edit_numb']
+        var_email=request.POST['edit_email']
+        var_address=request.POST['edit_addrss']
+        var_qualification=request.POST['edit_qual']
+        var_joiningdate=request.POST['edit_jdate']
+        var_status=request.POST['edit_status']
+        obj=EmployeeRegistration.objects.get(id=item_id)
+        obj.empname=var_name
+        obj.dob=var_dob
+        obj.gender=var_gender
+        obj.mob=var_mobile
+        obj.email=var_email
+        obj.address=var_address
+        obj.qualid.qualifname=var_qualification
+        obj.jdate=var_joiningdate
+        obj.status=var_status
+        if 'edit_photo' in  request.FILES:
+            objphoto=request.FILES['edit_photo']
+            obj.photo=objphoto
         obj.save()
         return redirect('get_employee_details')
-    context = {
-        'employee_data': employee_data,
-        'sub_cls_div_objects': sub_cls_div_objects,
-        'class_names': class_names,
-        'division_names': division_names,
-        'subject_names': subject_names,
-    }
-    return render(request, 'Employee_edit.html', context)
+    objjjj=EmployeeRegistration.objects.get(id=item_id)
+    cat=EmployeeRegistration.objects.filter(id=item_id).select_related('empcatid')
+    objj=masterqualif.objects.all()
+    cladiv=list(sub_cls_div.objects.filter(empid=item_id).prefetch_related('classid','divid','subid'))
+    return JsonResponse({'list':cladiv})
+    cla=masterclass.objects.filter(status=1).order_by("classname")  
+    divi=masterdivision.objects.filter(status=1).order_by("divisionname")
+    sub=subject.objects.filter(status=1).order_by("sub_name")
+    return render(request,'Employee_edit.html',{'data':objjjj,
+                                                'list':objj,
+                                                'cla':cla,
+                                                "divi":divi,
+                                                "sub":sub,
+                                                'cladiv':cladiv,
+                                                'datta':cat})
+
 
 def delete_empl(request):
     if request.GET:

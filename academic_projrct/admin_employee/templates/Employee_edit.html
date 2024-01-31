@@ -53,19 +53,19 @@
                             <!-- START DEFAULT FORM ELEMENTS -->
                             <div class="block">
                                 <h4>Edit Employee</h4>
-                                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" action="{% url 'fetch_employee' item_id=employee_data.id %}">
+                                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" action="{% url 'fetch_employee' item_id=data.id %}">
                                     {% csrf_token %}                                    
                                     
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Name</label>
                                         <div class="col-md-10">
-                                            <input type="text" class="form-control" placeholder="Enter Name" name="edit_name" required value="{{employee_data.empname}}"/>
+                                            <input type="text" class="form-control" placeholder="Enter Name" name="edit_name" required value="{{data.empname}}"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">DOB</label>
                                         <div class="col-md-10">
-                                            <input type="date" class="form-control" value="{{employee_data.dob|date:'Y-m-d'}}" name="edit_dob" required/>
+                                            <input type="date" class="form-control" value="{{data.dob|date:'Y-m-d'}}" name="edit_dob" required/>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -73,10 +73,10 @@
                                         <div class="col-md-10">                                                                                
                                             <select class="form-control select" name="edit_gen" required>
                                                 <option value="0">--Select Gender--</option>
-                                                {% if employee_data.gender == 1 %}
+                                                {% if data.gender == 1 %}
                                                 <option value="1" selected="selected">Male</option>
                                                 {% endif %}
-                                                {% if employee_data.gender == 2 %}
+                                                {% if data.gender == 2 %}
                                                 <option value="2" selected="selected">Female</option>
                                                 {% endif %}
                                             </select>
@@ -86,34 +86,48 @@
                                         <label class="col-md-2 control-label">status</label>
                                         <div class="col-md-10">
                                             <select class="form-control " data-style="btn-success" name="edit_status" id="editstatus" value="{{data.status}}">
-                                                <option value="1" {% if employee_data.status == '1' %} selected {% endif %}>Active</option>
-                                                <option value="0" {% if employee_data.status == '0' %} selected {% endif %}>Deactive</option>
+                                                <option value="1" {% if data.status == '1' %} selected {% endif %}>Active</option>
+                                                <option value="0" {% if data.status == '0' %} selected {% endif %}>Deactive</option>
                                             </select>
                                         </div>
-                                    </div>                              
+                                    </div>
+
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Mobile</label>
                                         <div class="col-md-10">
-                                            <input type="number" value="{{employee_data.mob}}" class="form-control" name="edit_numb" required>
+                                            <input type="number" value="{{data.mob}}" class="form-control" name="edit_numb" required>
                                         </div>
                                     </div>                                    
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">E-mail</label>
                                         <div class="col-md-10">
-                                            <input type="email" value="{{employee_data.email}}" class="form-control" placeholder="enter Your Mail" name="edit_email" required>
+                                            <input type="email" value="{{data.email}}" class="form-control" placeholder="enter Your Mail" name="edit_email" required>
                                         </div>
                                     </div>                                                                        
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Address</label>
                                         <div class="col-md-10">
-                                            <textarea class="form-control" rows="5" name="edit_addrss" required>{{employee_data.address}}</textarea>
+                                            <textarea class="form-control" rows="5" name="edit_addrss" required>{{data.address}}</textarea>
                                         </div>
                                     </div>
-                                    
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Qualification</label>
+                                        <div class="col-md-10">                                                                                
+                                            <select class="form-control select" name="edit_qual" required>
+                                                {% comment %} {% if data.qualid %}
+                                                <option value="{{data.qualid.id}}">{{data.qualid.qualifname}}</option>
+                                                {% endif %} {% endcomment %}
+                                                {% for i in list %}
+                                                <option value="{{i.id}}" {% if data.qualid %} selected  {% endif %}>{{i.qualifname}}</option>
+                                                
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div> 
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Join Date</label>
                                         <div class="col-md-10">
-                                            <input type="date" class="form-control" value="{{employee_data.jdate|date:'Y-m-d'}}" name="edit_jdate" required/>
+                                            <input type="date" class="form-control" value="{{data.jdate|date:'Y-m-d'}}" name="edit_jdate" required/>
                                         </div>
                                     </div> 
                                     <div class="form-group">
@@ -121,7 +135,7 @@
                                         <div class="col-md-10">
                                             <input type="file" name="edit_photo" required/>
                                             {% if data.photo %}
-                                             <img src="{{employee_data.photo.url}}" style="width: 100px; height: 100px;" align="left">
+                                             <img src="{{data.photo.url}}" style="width: 100px; height: 100px;" align="left">
             
                                             {% else %}
                                               <span>No Photo</span>
@@ -138,7 +152,7 @@
 
                         <!--start maanjpokuu-->
                         <div class="col-md-6" id="myTable"> 
-                            <div class="block">
+                            <div class="block" id="classdiv1">
                                 <h4>List</h4>
 
                                 <div class="form-group">
@@ -147,7 +161,7 @@
                                                                                                          
                                         <select class="form-control select" name="selcls" id="sel_cls" onchange="sub_lists(this.value)">
                                             <option value="0">--Select Class--</option>
-                                        {% for i in clslist %}
+                                        {% for i in cla %}
                                            
                                             <option value="{{i.id}}">{{i.classname}}</option>
                                             {% endfor %}
@@ -159,7 +173,7 @@
                                     <div class="col-md-10">                                                                                
                                         <select class="form-control select" name="seldiv" id="div_select">
                                             <option value="0">--Select Division--</option>
-                                            {% for i in divlist %}
+                                            {% for i in divi %}
                                             <option value="{{i.id}}">{{i.divisionname}}</option>
                                             {% endfor %}
                                         </select>
@@ -179,7 +193,7 @@
                                <!-- START DEFAULT DATATABLE -->
                  <div class="panel panel-default">
                     <div class="panel-body">
-                        <table class="table datatable">
+                        <table class="table datatable" id="mytb1">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -190,9 +204,7 @@
                                 </tr>
                             </thead>
                             <tbody id="tabledata">
-                                
-                                
-                                
+                            
                             </tbody>
                                  
                         </table>
@@ -249,3 +261,84 @@
 
 
 
+<script>
+       
+    function EditpageaddRow(Classid,Subjectid,Divisionid,oldclass,oldsubject,olddivision) {
+
+        alert(Classid)
+        var table = document.getElementById("mytb1").getElementsByTagName('tbody')[0];
+
+            // Creating a new row
+            var newRow = table.insertRow(table.rows.length);
+    
+            var cell1 = newRow.insertCell(0);
+            cell1.innerHTML = table.rows.length;
+    
+            // Cell 2: Class
+            var cell2 = newRow.insertCell(1); 
+            
+            cell2.innerHTML = oldclass;
+            var textbox1 = document.createElement("input");
+            textbox1.type = "text";
+            textbox1.id = "txtclass";
+            textbox1.name = "txtclass";
+            textbox1.style.display = "none";
+            textbox1.value =Classid;
+            cell2.appendChild(textbox1);
+    
+            // Cell 3: Subject
+            var cell3 = newRow.insertCell(2);
+            cell3.innerHTML = olddivision;
+            var textbox2 = document.createElement("input");
+            textbox2.type = "text";
+            textbox2.id = "txtsubject";
+            textbox2.name = "txtsubject";
+            textbox2.style.display = "none";
+            textbox2.value = Subjectid;
+            cell3.appendChild(textbox2);
+    
+            // Cell 4: Division
+            var cell4 = newRow.insertCell(3);
+            cell4.innerHTML=oldsubject ;
+            var textbox3 = document.createElement("input");
+            textbox3.type = "text";
+            textbox3.id = "txtdivision";
+            textbox3.name = "txtdivision";
+            textbox3.style.display = "none";
+            textbox3.value =Divisionid
+            cell4.appendChild(textbox3);
+    
+            // Cell 5: Action
+            var cell5 = newRow.insertCell(4);
+            var button = document.createElement("button");
+            button.innerHTML = '<span class="deleteRow btn-danger">Remove</span>';
+            button.className = "deleteRow btn-danger";
+            button.onclick = function() {
+                deleteRow(newRow);
+            };
+            cell5.appendChild(button);
+        }
+        
+
+        {% for scditems in cladiv %}
+            console.log('Classid:', '{{scditems.classid.id}}');
+            EditpageaddRow('{{scditems.classid.id}}','{{scditems.subid.id}}','{{scditems.divid.id}}','{{scditems.classid.classname}}','{{scditems.subid.sub_name}}','{{scditems.divid.divisionname}}');
+             
+        {% endfor %}
+       
+function hidedivEdit(empid)
+{
+    
+   var teacherdata=$('#classdiv1');
+
+   if(empid == "2")
+       teacherdata.show();
+   else
+       teacherdata.hide();
+}
+{% if datta %}
+{% for i in datta %}
+    hidedivEdit('{{i.empcatid.empcatarea}}')
+{% endfor %}
+{% endif %}
+</script>

@@ -53,3 +53,4 @@ class sub_cls_div(models.Model):
     classid=models.ForeignKey(masterclass,on_delete=models.CASCADE)
     divid= models.ForeignKey(masterdivision,on_delete=models.CASCADE)
     subid=models.ForeignKey(subject,on_delete=models.CASCADE)
+    

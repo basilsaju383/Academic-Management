@@ -32,3 +32,4 @@ class subject(models.Model):
     sub_name=models.CharField(max_length=200)
     status=models.IntegerField(default=1)
     classes=models.ManyToManyField('masterclass')
+    

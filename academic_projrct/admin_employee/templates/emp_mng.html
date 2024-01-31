@@ -49,11 +49,16 @@
                 
                     <div class="row">
                         <div class="col-md-6">
-
+                            <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" action="{% url 'empl_mng' %}">
                             <!-- START DEFAULT FORM ELEMENTS -->
+                            <!-- Inside your form -->
+<input type="hidden" name="selcls" value="{{ selected_class_id }}">
+<input type="hidden" name="seldiv" value="{{ selected_div_id }}">
+<input type="hidden" name="selsub" value="{{ selected_sub_id }}">
+
                             <div class="block">
                                 <h4>Employee Registration</h4>
-                                <form class="form-horizontal" role="form" method="post" enctype="multipart/form-data" action="{% url 'empl_mng' %}">
+                                
                                     {% csrf_token %}                                    
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Category Area</label>
@@ -175,8 +180,9 @@
                                         {{msg}}            
                                         <button class="btn btn-primary pull-right">Submit</button>
                                     </div>                                  
-                                </form>
+                                
                             </div>
+
                         </div>
 
                         <!--start maanjpokuu-->
@@ -217,7 +223,7 @@
                                     </div>
                                 </div>
                                 <div class="btn-group pull-right">
-                                        <button class="btn btn-primary" type="submit" onclick="subclass_adding()">Add</button>
+                                        <button class="btn btn-primary" type="button" onclick="subclass_adding()">Add</button>
                                     </div>
                                <!-- START DEFAULT DATATABLE -->
                  <div class="panel panel-default">
@@ -246,6 +252,7 @@
                   
                 </div>
             </div>
+        </form>
             <!--end maanjpokuu-->
                 <!-- END DEFAULT DATATABLE --> 
                             </div>

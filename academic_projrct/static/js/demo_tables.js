@@ -229,6 +229,8 @@
     if (combinationExists) {
         alert('Combination already exists.');
     } else {
+    
+
         var serial=0;
 
         serial++;
@@ -245,6 +247,15 @@
         document.getElementById('sel_cls').value='';
         document.getElementById('div_select').value='';
         document.getElementById('subjectDropdown').innerHTML='<option value="">Select Subject</option>';
+
+    var selected_class_id = $('#sel_cls').val();
+    var selected_div_id = $('#div_select').val();
+    var selected_sub_id = $('#subjectDropdown').val();
+
+    // Set hidden input values
+    $('input[name="selcls"]').val(selected_class_id);
+    $('input[name="seldiv"]').val(selected_div_id);
+    $('input[name="selsub"]').val(selected_sub_id);
     }
 
     // delete row functionality
@@ -252,4 +263,16 @@
         // serial--; // Decrement serial when deleting a row
         $(this).closest('tr').remove();
     });
+
+
+    
+    // ... Your existing code to append the row
+
+    // Submit the form or save the data using AJAX
+    // You may need to adjust this based on your form's ID
+    
 }
+
+
+
+
